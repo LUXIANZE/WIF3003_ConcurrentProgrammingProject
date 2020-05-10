@@ -1,7 +1,7 @@
 # Getting Started
 
 ### Installation
-#####Maven
+##### Maven
 This project is a Maven Project.
 Please install Maven and configure your pc environment variable
 * [Maven Official Website](https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip)
@@ -9,21 +9,21 @@ Please install Maven and configure your pc environment variable
 
 Use ```mvn -version``` to verify installation success
 
-#####Java JDK1.8
+##### Java JDK1.8
 This project is using Java 8. Please install Java and configure your pc environment variable.
 Use ```java -version``` to verify installation success
 
-#####Node.js
+##### Node.js
 This project uses NPM. Please install node.js and configure your pc environment variable.
 Use ```npm -v``` to verify installation success
 
 ### Execute the program
-####Start the backend server
+#### Start the backend server
 Run the executable java backend in
 ```
 src > main > java > com.assignment.concurrent > ConcurrentApplication.java
 ```
-####Start the frontend
+#### Start the frontend
 Run the frontend of the application by
 1. open the cmd for the project
 2. enter ```cd frontend``` to navigate to the front end folder
