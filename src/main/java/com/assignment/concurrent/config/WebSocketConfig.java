@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final String FRONT_END_ORIGIN = "http://localhost:5000";
+    private static final String FRONT_END_ORIGIN = "http://localhost:3000";
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
