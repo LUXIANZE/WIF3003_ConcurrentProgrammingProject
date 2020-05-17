@@ -46,7 +46,7 @@ function setConnected(connected) {
 function connect() {
   $(".connection-status").hide();
   var socket = new SockJS('http://localhost:8080/gs-guide-websocket');
-  stompClient = Stomp.over(socket);
+  stompClient = Stomp.Stomp.over(socket);
   var connectCallback = function (frame) {
     setConnected(true);
         console.log('Connected: ' + frame);
