@@ -23,12 +23,12 @@ Run the executable java backend in
 ```
 src > main > java > com.assignment.concurrent > ConcurrentApplication.java
 ```
-#### Start the frontend
+#### Start the React-app
 Run the frontend of the application by
 1. open the cmd for the project
-2. enter ```cd frontend``` to navigate to the front end folder
-3. enter ```npm run serve``` to run the application
-4. open ```http://localhost:5000``` with your browser
+2. enter ```cd React-app``` to navigate to the front end folder
+3. enter ```npm start``` to run the application
+4. open ```http://localhost:3000``` with your browser
 
 #### Play with the Demo
 1. click ```connect```
