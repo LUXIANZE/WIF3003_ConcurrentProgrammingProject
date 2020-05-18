@@ -1,6 +1,6 @@
 package com.assignment.concurrent.util;
 
-import com.assignment.concurrent.domain.Coordinate;
+import com.assignment.concurrent.domain.Point;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
@@ -12,27 +12,25 @@ import java.util.Set;
 @Component
 public class PointsUtil {
 
-    public static Set<Coordinate> createPoints(int numOfPoints) {
+    public static Set<Point> createPoints(int numOfPoints) {
         //HashSet does not allow duplicate elements
-        Set<Coordinate> points = new HashSet<>();
+        Set<Point> points = new HashSet<>();
         while (points.size() < numOfPoints) {
-            Coordinate coordinate = new Coordinate();
-            coordinate.setX(randomDouble());
-            coordinate.setY(randomDouble());
-            points.add(coordinate);
+            Point point = new Point(randomDouble(), randomDouble());
+            points.add(point);
         }
         return points;
     }
 
-    public static synchronized Coordinate pop(Set<Coordinate> points) {
+    public static synchronized Point pop(Set<Point> points) {
 
         int randomNumber = new Random().nextInt(points.size());
 
         //get an iterator
-        Iterator<? extends Coordinate> iterator = points.iterator();
+        Iterator<? extends Point> iterator = points.iterator();
 
         int currentIndex = 0;
-        Coordinate randomElement = null;
+        Point randomElement = null;
 
         //iterate the HashSet
         while(iterator.hasNext()){
