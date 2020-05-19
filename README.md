@@ -23,17 +23,14 @@ Run the executable java backend in
 ```
 src > main > java > com.assignment.concurrent > ConcurrentApplication.java
 ```
-For first execution, to install all maven dependencies
+First time running, to install all maven dependency
 ```
 mvn install
 ```
-to package
+To test run
 ```
 mvn package
-```
-to execute
-```
-java -jar "executable in the package"
+java -jar "file path of executable"
 ```
 #### Start the React-app
 Run the frontend of the application by
@@ -44,7 +41,7 @@ Run the frontend of the application by
 
 #### Play with the Demo
 1. click ```start```
-2. enter all the required parameters
+2. enter the required parameters
 3. observe changes in output
 
 
