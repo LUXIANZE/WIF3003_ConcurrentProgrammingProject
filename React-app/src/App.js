@@ -1,90 +1,116 @@
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import SockJS from 'sockjs-client';
-import logo from './logo.svg';
-import './App.css';
+import { Stomp } from '@stomp/stompjs'
+import UserForm from './components/UserForm';
 
-const $ = window.$;
+const style = {
+  root: {
+    backgroundColor: "#282c34",
+    minHeight: "100vh"
+  },
+  startButton: {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+  infoBox: {
+    color: "white"
+  }
+}
+let stompClient = null;
 
 function App() {
+  const [status, setStatus] = React.useState({
+    connected: false,
+    errorMessage: ""
+  })
+  const [board, setBoard] = React.useState({
+    points: null,
+  })
+  const [edge, setEdge] = React.useState(null)
+  const connectCallback = (frame) => {
+    setStatus({
+      connected: true,
+      errorMessage: ""
+    })
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/board', function (message) {
+      const data = JSON.parse(message.body)
+      setBoard({
+        points: data.points
+      })
+    });
+    stompClient.subscribe('/topic/edge', function (message) {
+      const data = JSON.parse(message.body)
+      setEdge(data.points)
+    });
+  }
+  const errorCallback = (error) => {
+    setStatus({
+      connected: false,
+      errorMessage: "Please check your backend"
+    })
+  }
+  const handleConnect = (formData) => {
+    setStatus({
+      connected: false,
+      errorMessage: ""
+    });
+    const socket = new SockJS('http://localhost:8080/conquer-nodes-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, connectCallback, errorCallback);
+  }
+  const handleDisConnect = () => {
+    if (stompClient !== null) {
+      setStatus({
+        connected: false,
+        errorMessage: ""
+      })
+      stompClient.disconnect();
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={style.root}>
+      <Typography variant="h6" color="secondary">
+        You are {status.connected ? "connected" : "not connected"}
+      </Typography>
+      {
+        status.errorMessage &&
+        <Typography variant="h6" color="secondary">
+          {status.errorMessage}
+        </Typography>
+      }
+      {
+        status.connected
+          ? <UserForm stompClient={stompClient} />
+          : <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConnect}
+            className={style.startButton}
+          >
+            start game
+            </Button>
+      }
+      <div style={style.infoBox}>
+        <div>
+          topic/board:
+          {board.points && board.points.map((point, i) =>
+            <div key={i}>{`x: ${point.x}, y: ${point.y}`}</div>
+          )}
+        </div>
+        <div>
+          topic/edge:
+          {edge && edge.map((point, i) =>
+            <div key={i}>{`x: ${point.x}, y: ${point.y}`}</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
-
-var Stomp = require('@stomp/stompjs');
-var stompClient = null;
-
-function setConnected(connected) {
-  $("#connect").prop("disabled", connected);
-  $("#disconnect").prop("disabled", !connected);
-  if (connected) {
-    $("#conversation").show();
-    $("#connected-message").show();
-  }
-  else {
-    $("#conversation").hide();
-    $("#disconnected-message").show();
-  }
-  $("#greetings").html("");
-}
-
-function connect() {
-  $(".connection-status").hide();
-  var socket = new SockJS('http://localhost:8080/gs-guide-websocket');
-  stompClient = Stomp.Stomp.over(socket);
-  var connectCallback = function (frame) {
-    setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-        showGreeting(JSON.parse(greeting.body));
-        });
-    }
-  var errorCallback = function (error) {
-    $("#connection-failure-message").show();
-  }
-  stompClient.connect({}, connectCallback, errorCallback);
-}
-
-function disconnect() {
-  $(".connection-status").hide();
-  if (stompClient !== null) {
-    stompClient.disconnect();
-  }
-  setConnected(false);
-  console.log("Disconnected");
-}
-
-function sendName() {
-  stompClient.send("/app/hello", {}, JSON.stringify({ 'name': $("#name").val() }));
-}
-
-function showGreeting(message) {
-  $("#greetings").append("<tr><td>" + message.data + "</td></tr>");
-}
-
-$(function () {
-  $("form").on('submit', function (e) {
-    e.preventDefault();
-  });
-  $("#connect").click(function () { connect(); });
-  $("#disconnect").click(function () { disconnect(); });
-  $("#send").click(function () { sendName(); });
-  $(".connection-status").hide();
-});
 
 export default App;
