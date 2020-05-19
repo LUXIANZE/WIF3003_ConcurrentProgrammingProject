@@ -23,6 +23,18 @@ Run the executable java backend in
 ```
 src > main > java > com.assignment.concurrent > ConcurrentApplication.java
 ```
+For first execution, to install all maven dependencies
+```
+mvn install
+```
+to package
+```
+mvn package
+```
+to execute
+```
+java -jar "executable in the package"
+```
 #### Start the React-app
 Run the frontend of the application by
 1. open the cmd for the project
@@ -31,9 +43,9 @@ Run the frontend of the application by
 4. open ```http://localhost:3000``` with your browser
 
 #### Play with the Demo
-1. click ```connect```
-2. enter your name and click ```send```
-3. watch two threads says 'hi' to you in real time!
+1. click ```start```
+2. enter all the required parameters
+3. observe changes in output
 
 
 ### Reference Documentation
