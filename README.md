@@ -37,7 +37,7 @@ src > main > java > com.assignment.concurrent > ConcurrentApplication.java
 java -jar "file path of executable"
 ```
 
-#### Start the React-app
+#### Start the Fronted
 Navigate into React-app from root folder
 ```
 cd ./React-app
