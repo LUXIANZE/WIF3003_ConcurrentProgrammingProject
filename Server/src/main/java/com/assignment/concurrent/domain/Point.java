@@ -17,8 +17,8 @@ public class Point {
         this.y = y;
     }
     
-    public void lock(){
-        lock.lock();
+    public void tryLock(){
+        lock.tryLock();
     }
         
     public boolean isLocked(){
