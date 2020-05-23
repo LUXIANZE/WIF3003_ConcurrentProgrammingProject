@@ -35,3 +35,4 @@ build/
 
 ### npm dependencies ###
 frontend/node_modules/
+/bin/
