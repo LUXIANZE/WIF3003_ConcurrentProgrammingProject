@@ -17,22 +17,6 @@ public class Point {
         this.y = y;
     }
     
-    public double getX(){
-        return x;
-    }
-    
-    public double getY(){
-        return y;
-    }
-    
-    public boolean getHasEdge(){
-        return hasEdge;
-    }
-    
-    public void setHasEdge(){
-        this.hasEdge = true;
-    }
-    
     public void lock(){
         lock.lock();
     }
