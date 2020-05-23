@@ -1,41 +1,24 @@
 package com.assignment.concurrent.domain;
 
-import lombok.Data;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-@Data
 public class Point {
-
-    public Point(Double x, Double y) {
+    private double x;
+    private double y;
+    private boolean hasEdge = false;
+    
+    public Point(double x, double y){
         this.x = x;
         this.y = y;
     }
-
-    private Double x;
-    private Double y;
-
-    //for hashSet use
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(x)
-                .append(y)
-                .toHashCode();
+    
+    public boolean getHasEdge(){
+        return hasEdge;
     }
-
-    //for hashSet use
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Point) {
-            final Point point = (Point) obj;
-
-            return new EqualsBuilder()
-                    .append(x, point.x)
-                    .append(y, point.y)
-                    .isEquals();
-        } else {
-            return false;
-        }
+    
+    public void setHasEdge(){
+        this.hasEdge = true;
+    }
+    
+    public String toString(){
+        return ("x: " + this.x + ". y: " + this.y + ". Edge formed: " + this.hasEdge);
     }
 }
