@@ -2,14 +2,20 @@ package com.assignment.concurrent.domain;
 
 import lombok.Data;
 
-import java.util.Set;
+
 
 @Data
 public class Edge {
 
-    public Edge(Set<Point> points) {
-        this.points = points;
+    private Point firstPoint;
+    private Point secondPoint;
+
+    public Edge(Point firstPoint, Point secondPoint) {
+        this.firstPoint = firstPoint;
+        this.secondPoint = secondPoint;
     }
 
-    private Set<Point> points;
+    public Point[] getEdegePoints(){
+        return new Point[]{this.firstPoint, this.secondPoint};
+    }
 }
