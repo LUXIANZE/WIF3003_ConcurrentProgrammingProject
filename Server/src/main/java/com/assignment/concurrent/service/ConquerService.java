@@ -3,7 +3,6 @@ package com.assignment.concurrent.service;
 import com.assignment.concurrent.domain.Board;
 import com.assignment.concurrent.domain.Point;
 import com.assignment.concurrent.domain.UserInputMessage;
-import com.assignment.concurrent.util.PointsUtil;
 import com.assignment.concurrent.util.RunnableFactory;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +13,12 @@ public class ConquerService {
 
     private final RunnableFactory runnableFactory;
 
-    public ConquerService(RunnableFactory runnableFactory, PointsUtil pointsFactory) {
+    public ConquerService(RunnableFactory runnableFactory, PointsService pointsFactory) {
         this.runnableFactory = runnableFactory;
     }
 
     public Board start(UserInputMessage userInputMessage) {
-        Set<Point> points = PointsUtil.createPoints(userInputMessage.getN());
+        Set<Point> points = PointsService.createPoints(userInputMessage.getN());
         Board board = new Board();
         board.setPoints(points);
         //can change to Thread pool

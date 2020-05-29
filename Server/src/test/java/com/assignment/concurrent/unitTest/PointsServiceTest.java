@@ -1,7 +1,7 @@
 package com.assignment.concurrent.unitTest;
 
 import com.assignment.concurrent.domain.Point;
-import com.assignment.concurrent.util.PointsUtil;
+import com.assignment.concurrent.service.PointsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-class PointsUtilTest {
+class PointsServiceTest {
 
     @BeforeEach
     void setUp() {
@@ -29,7 +29,7 @@ class PointsUtilTest {
     @Test
     public void createPointsShouldNotContainDuplicateValues() {
         int numOfPoints = 5000;
-        Collection collection = PointsUtil.createPoints(numOfPoints);
+        Collection collection = PointsService.createPoints(numOfPoints);
 
         assertEquals(collection.size() , numOfPoints);
         assertEquals(new HashSet<Double>(collection).size(), numOfPoints);
@@ -38,9 +38,9 @@ class PointsUtilTest {
     @Test
     public void popShouldRemoveSelectedElementFromSet() {
         int numOfPoints = 5000;
-        Set<Point> set = PointsUtil.createPoints(numOfPoints);
+        Set<Point> set = PointsService.createPoints(numOfPoints);
 
-        Point point = PointsUtil.pop(set);
+        Point point = PointsService.pop(set);
         assertEquals(set.size(), numOfPoints-1);
         assertFalse(set.contains(point));
     }
