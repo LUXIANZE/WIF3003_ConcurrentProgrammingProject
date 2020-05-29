@@ -2,11 +2,13 @@ package com.assignment.concurrent.service;
 
 import com.assignment.concurrent.domain.Board;
 import com.assignment.concurrent.domain.Point;
+import com.assignment.concurrent.domain.PointPairingTask;
 import com.assignment.concurrent.domain.UserInputMessage;
 import com.assignment.concurrent.util.RunnableFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 @Service
 public class ConquerService {
@@ -18,9 +20,13 @@ public class ConquerService {
     }
 
     public Board start(UserInputMessage userInputMessage) {
-        Set<Point> points = PointsService.createPoints(userInputMessage.getN());
+        int n = userInputMessage.getN();
         Board board = new Board();
-        board.setPoints(points);
+        Set<Point> points = PointsService.generatePoints(n);
+        Point[] pointsArr = new Point[n];
+        points.toArray(pointsArr);
+        Callable C = new PointPairingTask(pointsArr);
+        // board.setPoints(points);
         //can change to Thread pool
         Thread thread1 = new Thread(runnableFactory.createRunnableSpammer(points));
         Thread thread2 = new Thread(runnableFactory.createRunnableSpammer(points));

@@ -20,8 +20,8 @@ public class RunnableFactory {
             public void run() {
                 for (int i = 0; i < 10; i++) {
                     String threadName = Thread.currentThread().getName();
-                    Point point = PointsService.pop(points);
-                    messageService.send( threadName + " says Annyeong with coordinate " + point);
+                    // Point point = PointsService.pop(points);
+                    // messageService.send( threadName + " says Annyeong with coordinate " + point);
                 }
             }
         };
