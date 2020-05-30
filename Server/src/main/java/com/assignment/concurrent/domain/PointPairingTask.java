@@ -81,6 +81,7 @@ public class PointPairingTask implements Callable<List> {
                     p2.getLock().unlock();
                 }
             }else{
+                p1.getLock().unlock();
                 failAttempts++;
             }
         }
