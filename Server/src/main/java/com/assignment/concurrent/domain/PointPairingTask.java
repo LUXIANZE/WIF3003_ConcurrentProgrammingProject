@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 
 import com.assignment.concurrent.service.PointsService;
 
-public class PointPairingTask implements Callable<Edge> {
+public class PointPairingTask implements Callable<List> {
 
     private static int totalEdgeFormed;
     private static long startTime;
@@ -26,7 +26,8 @@ public class PointPairingTask implements Callable<Edge> {
     }
 
     @Override
-    public Edge call() throws Exception {
+    public List call() throws Exception {
+        // TODO change the flow control accordingly, these are dummy values
         long start = 0;
         long now = 0;
         long target = 2;
@@ -35,7 +36,7 @@ public class PointPairingTask implements Callable<Edge> {
             edgeArrayList.add(formEdges());
         }
         
-        return null;
+        return edgeArrayList;
     }
 
     public int getEdgesFormed(){
@@ -49,28 +50,33 @@ public class PointPairingTask implements Callable<Edge> {
     private Edge formEdges() throws InterruptedException {
         Random r = new Random();
         Edge edgeFormed = null;
-        int p1 = r.nextInt(points.length);
-        int p2 = r.nextInt(points.length);
+        // generate 2 random int
+        int r1 = r.nextInt(points.length);
+        int r2 = r.nextInt(points.length);
+        while (r2 == r1) {
+            r2 = r.nextInt(points.length);
+        }
+        // get two random points
+        Point p1 = points[r1];
+        Point p2 = points[r2];
 
-        // Try to acquire 2 points
-        while(points[p1].isLocked() || points[p2].isLocked() || (!points[p1].isHasEdge() && !points[p2].isHasEdge())) {
-            if(points[p1].isLocked()) p1 = r.nextInt(points.length);
-            if(points[p2].isLocked()) p2 = r.nextInt(points.length);
-            if (points[p1].isHasEdge()||points[p2].isHasEdge()) {
+        if (p1.getLock().tryLock() && p2.getLock().tryLock()){
+            if(!p1.isHasEdge() && !p2.isHasEdge()){
+                try {
+                    edgeFormed = new Edge(p1,p2);
+                    p1.setHasEdge(true);
+                    p2.setHasEdge(true);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }finally{
+                    p1.getLock().unlock();
+                    p2.getLock().unlock();
+                }
+            }else{
                 failAttempts++;
             }
-        }
-
-        // form Edge using 2 points
-        try {
-            points[p1].getLock().lock();
-            points[p2].getLock().lock();
-            edgeFormed = new Edge(points[p1],points[p2]);
-        } catch (Exception e) {
-            System.out.println(e);
-        }finally{
-            points[p1].unlock();
-            points[p2].unlock();
+        }else{
+            failAttempts++;
         }
         return edgeFormed;
     }

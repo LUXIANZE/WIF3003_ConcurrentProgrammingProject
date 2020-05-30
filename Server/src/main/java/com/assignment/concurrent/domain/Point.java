@@ -17,14 +17,6 @@ public class Point {
         this.y = y;
     }
     
-    public void tryLock(){
-        lock.tryLock();
-    }
-        
-    public boolean isLocked(){
-        return lock.isLocked();
-    }
-    
     public void unlock(){
         if(lock.isHeldByCurrentThread()){
             lock.unlock();
