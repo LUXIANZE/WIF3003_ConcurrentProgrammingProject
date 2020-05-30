@@ -7,4 +7,8 @@ public class UserInputMessage {
     private Integer n;
     private Integer m;
     private Integer t;
+
+    public Integer getN(){
+        return n;
+    }
 }

@@ -22,7 +22,7 @@ public class PointsService {
         return points;
     }
 
-    private static Double randomDouble() {
+    public static Double randomDouble() {
         Double value = new Random().nextDouble()*1000;
         DecimalFormat df = new DecimalFormat("#.##");
         return Double.valueOf(df.format(value));

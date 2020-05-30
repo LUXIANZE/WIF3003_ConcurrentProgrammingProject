@@ -19,10 +19,7 @@ public class MessageService {
     public synchronized void send(String message) {
         try {
             Thread.sleep(1000);
-            Set<Point> aPairOfPoints = new HashSet();
-            aPairOfPoints.add(new Point(randomDouble(), 2.2));
-            aPairOfPoints.add(new Point(randomDouble(), 4.2));
-            messagingTemplate.convertAndSend( "/topic/edge", new Edge(aPairOfPoints) );
+            messagingTemplate.convertAndSend( "/topic/edge", new Edge(new Point(1,1),new Point(1,1)) );
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
