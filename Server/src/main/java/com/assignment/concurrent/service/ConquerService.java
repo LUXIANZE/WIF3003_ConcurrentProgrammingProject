@@ -21,7 +21,9 @@ public class ConquerService {
 
     public Board start(UserInputMessage userInputMessage) {
         int n = userInputMessage.getN();
-        Board board = new Board();
+        int m = userInputMessage.getM();
+        int t = userInputMessage.getT();
+        Board board = new Board(n, m, t);
         Set<Point> points = PointsService.generatePoints(n);
         Point[] pointsArr = new Point[n];
         points.toArray(pointsArr);

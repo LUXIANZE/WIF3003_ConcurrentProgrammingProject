@@ -14,7 +14,7 @@ public class PointPairingTask implements Callable<List> {
 
     private static int totalEdgeFormed;
     private static long startTime;
-    private boolean threadFail;
+    private static boolean threadFail;
     private int failAttempts;
     private int numberOfPoints;
     private Point[] points;
@@ -23,6 +23,7 @@ public class PointPairingTask implements Callable<List> {
     public PointPairingTask(Point[] arr){
         this.points = arr;
         this.edgeArrayList = new ArrayList<Edge>();
+        threadFail = false;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class PointPairingTask implements Callable<List> {
         long now = 0;
         long target = 4;
 
-        while( (now-start) < target ){
+        while(!threadFail){
             edgeArrayList.add(formEdges());
             now++;
         }
@@ -48,11 +49,15 @@ public class PointPairingTask implements Callable<List> {
         return failAttempts;
     }
     
+    public static void killThread(){
+        threadFail = true;
+    }
+    
     private Edge formEdges() throws InterruptedException {
         Random r = new Random();
         Edge edgeFormed = null;
 
-        while (edgeFormed == null) {
+        while (edgeFormed == null && !threadFail) {
             // generate 2 random int
             int r1 = r.nextInt(points.length);
             int r2 = r.nextInt(points.length);
