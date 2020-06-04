@@ -1,79 +1,56 @@
 package com.assignment.concurrent.domain;
 
-import com.assignment.concurrent.service.PointsService;
-import java.util.HashSet;
-import java.util.Random;
+import com.assignment.concurrent.service.StopTaskService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Board {
-    private int n; //number of points
-    private int t; //number of threads
     private int m; //max execution time
-    private Set<Point> pointSet;
-    private PointPairingTask[] threadArray;
-    private Random rand;
+    private Point[] points;
+    private PointPairingTask[] pointPairingTasks;
     private Timer timer;
     private ExecutorService executorService;
     private long startTime;
-    
-    class StopTask extends TimerTask{
-        @Override
-        public void run() {
-            long endTime = System.currentTimeMillis();
-            System.out.println("Start:" + startTime);
-            System.out.println("end  :" + endTime);
-            System.out.println("end after " + (endTime - startTime));
-            printEdgesFormed();
-            PointPairingTask.killThread();//because the InterruptedException is catched,
-            //need to set the variable to stop the Runnable
-            executorService.shutdownNow();
-            timer.cancel();//need to cancel the timer or the program wont end
-        }
-    }
+    private StopTaskService stopTask;
+    private List<Edge> edges;
 
-    public Board(int n, int t, int m) {
-        this.n = n;
-        this.t = t;
+    public Board(Point[] points, PointPairingTask[] pointPairingTasks, Timer timer, ExecutorService executorService, StopTaskService stopTask, int m) {
+        this.points = points;
+        this.pointPairingTasks = pointPairingTasks;
+        this.timer = timer;
+        this.executorService = executorService;
+        this.stopTask = stopTask;
         this.m = m;
-        rand = new Random();
-        this.pointSet = PointsService.generatePoints(n);
-        createThread();
-        executorService = Executors.newFixedThreadPool(t);
-        timer = new Timer();
-    }
-    
-    /**
-     * point array is made as temporary object to pass into PointPairingTask class
-     */
-    private void createThread(){
-        threadArray = new PointPairingTask[t];
-        Point[] pointArray = pointSet.toArray(new Point[n]);
-        for (int i = 0; i < t; i++) {
-            threadArray[i] = new PointPairingTask(pointArray);
-        }
+        edges = new ArrayList<>();
     }
     
     public void startProgram(){
-        StopTask task = new StopTask();
-        timer.schedule(task, m * 1000);//to schedule the shutdown task so the program 
+        timer.schedule(stopTask, m * 1000);//to schedule the shutdown task so the program 
         //must end after m seconds
         this.startTime = System.currentTimeMillis();
-        for (int i = 0; i < t; i++) {
-            executorService.submit(threadArray[i]);
+        
+        //return edgeLists from PointPairingTask and add them into edges
+        try {
+            List<Future<List>> futureList = executorService.invokeAll(Arrays.asList(pointPairingTasks));
+            for (Future<List> list : futureList) {
+                edges.addAll(list.get());
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void printEdgesFormed(){
-        int totalEdgesFormed = 0;
-        for (int i = 1; i <= t; i++) {
-            System.out.println("Thread " + i + " formed " + threadArray[i-1].getEdgesFormed() + " edges.");
-            totalEdgesFormed += threadArray[i-1].getEdgesFormed();
-        }
-        System.out.println("Total edges formed for all threads: " + totalEdgesFormed);
+    public List<Edge> getEdges(){
+        return edges;
     }
 }
