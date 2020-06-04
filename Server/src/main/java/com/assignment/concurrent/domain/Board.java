@@ -39,7 +39,23 @@ public class Board {
         
         //return edgeLists from PointPairingTask and add them into edges
         try {
+            boolean programEnd = false;
             List<Future<List>> futureList = executorService.invokeAll(Arrays.asList(pointPairingTasks));
+            
+            //this for loop will be running after all executorService task return
+            //this for loop to check whether the program end because of 20 fail attempts
+            //if it end because of 20 fail attempts the Stop Task that was scheduled
+            //at the start should be cancelled
+            //the executorService will be shutdown at here if 20 fail attempts reached
+            //otherwise Stop Task Service should shut down it already
+            for (int i = 0; i < pointPairingTasks.length; i++) {
+                if (pointPairingTasks[i].getFailAttempts() >= 20) {
+                    timer.cancel();
+                    executorService.shutdownNow();
+                    break;
+                }
+            }
+            
             for (Future<List> list : futureList) {
                 edges.addAll(list.get());
             }
