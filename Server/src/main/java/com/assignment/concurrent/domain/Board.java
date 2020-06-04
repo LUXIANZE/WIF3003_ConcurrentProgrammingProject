@@ -19,6 +19,7 @@ public class Board {
     private Timer timer;
     private ExecutorService executorService;
     private long startTime;
+    private long endTime;
     private StopTaskService stopTask;
     private List<Edge> edges;
 
@@ -41,6 +42,7 @@ public class Board {
         try {
             boolean programEnd = false;
             List<Future<List>> futureList = executorService.invokeAll(Arrays.asList(pointPairingTasks));
+            long tempEndTime = System.currentTimeMillis();
             
             //this for loop will be running after all executorService task return
             //this for loop to check whether the program end because of 20 fail attempts
@@ -48,12 +50,18 @@ public class Board {
             //at the start should be cancelled
             //the executorService will be shutdown at here if 20 fail attempts reached
             //otherwise Stop Task Service should shut down it already
+            boolean endByStopTask = true;
             for (int i = 0; i < pointPairingTasks.length; i++) {
                 if (pointPairingTasks[i].getFailAttempts() >= 20) {
+                    endByStopTask = false;
+                    this.endTime = tempEndTime;
                     timer.cancel();
                     executorService.shutdownNow();
                     break;
                 }
+            }
+            if(endByStopTask){
+                this.endTime = stopTask.getEndTime();
             }
             
             for (Future<List> list : futureList) {
@@ -68,5 +76,17 @@ public class Board {
     
     public List<Edge> getEdges(){
         return edges;
+    }
+    
+    public Point[] getPoints(){
+        return points;
+    }
+    
+    public long getEndTime(){
+        return this.endTime;
+    }
+    
+    public long getStartTime(){
+        return this.startTime;
     }
 }
