@@ -8,7 +8,10 @@ import com.assignment.concurrent.util.RunnableFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.Timer;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class ConquerService {
@@ -23,17 +26,24 @@ public class ConquerService {
         int n = userInputMessage.getN();
         int m = userInputMessage.getM();
         int t = userInputMessage.getT();
-        Board board = new Board(n, m, t);
+        Timer timer = new Timer();
+        ExecutorService executorService = Executors.newFixedThreadPool(t);
+        StopTaskService stopTask = new StopTaskService(executorService, timer);
         Set<Point> points = PointsService.generatePoints(n);
         Point[] pointsArr = new Point[n];
         points.toArray(pointsArr);
-        Callable C = new PointPairingTask(pointsArr);
+        PointPairingTask[] pointPairingTasks = new PointPairingTask[t];
+        for (int i = 0; i < t; i++) {
+            pointPairingTasks[i] = new PointPairingTask(pointsArr);
+        }
+        Board board = new Board(pointsArr, pointPairingTasks, timer, executorService
+                , stopTask, m);
         // board.setPoints(points);
         //can change to Thread pool
-        Thread thread1 = new Thread(runnableFactory.createRunnableSpammer(points));
-        Thread thread2 = new Thread(runnableFactory.createRunnableSpammer(points));
-        thread1.start();
-        thread2.start();
+//        Thread thread1 = new Thread(runnableFactory.createRunnableSpammer(points));
+//        Thread thread2 = new Thread(runnableFactory.createRunnableSpammer(points));
+//        thread1.start();
+//        thread2.start();
         return board;
     }
 }
