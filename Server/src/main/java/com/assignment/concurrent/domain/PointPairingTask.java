@@ -28,14 +28,12 @@ public class PointPairingTask implements Callable<List> {
 
     @Override
     public List call() throws Exception {
-        // TODO change the flow control accordingly, these are dummy values
-        long start = 0;
-        long now = 0;
-        long target = 4;
-
+        
         while(!threadFail){
-            edgeArrayList.add(formEdges());
-            now++;
+            Edge edge = formEdges();
+            if(null != edge)//add this checking because the last edge maybe is null
+                //and added inside the list
+                edgeArrayList.add(edge);
         }
         
         return edgeArrayList;
@@ -58,6 +56,12 @@ public class PointPairingTask implements Callable<List> {
         Edge edgeFormed = null;
 
         while (edgeFormed == null && !threadFail) {
+            if(failAttempts >= 20){//if failAttempts equal or more than 20 the thread
+                //should stop forming edges
+                threadFail = true;
+                break;
+            }
+            
             // generate 2 random int
             int r1 = r.nextInt(points.length);
             int r2 = r.nextInt(points.length);
