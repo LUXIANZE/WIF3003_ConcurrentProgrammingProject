@@ -32,6 +32,7 @@ public class ConquerService {
         Set<Point> points = pointsService.generatePoints(n);
         Point[] pointsArr = new Point[n];
         points.toArray(pointsArr);
+        messageService.send("points", pointsArr);
         PointPairingTask[] pointPairingTasks = new PointPairingTask[t];
         for (int i = 0; i < t; i++) {
             pointPairingTasks[i] = new PointPairingTask(pointsArr, messageService);
