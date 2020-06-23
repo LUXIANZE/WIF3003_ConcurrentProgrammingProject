@@ -41,37 +41,71 @@ const mystyle = {
 const svgstyle = {
   backgroundColor:"transparent",
   position:"absolute",
-  top: 50,
-  left: 50
+  top: 100,
+  left: 100
 }
-function BoardView(props) {
-  var pt = props.points
-  var eg = props.edges
+class BoardView extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      edges:[],
+      circles : null,
+      sc:null
+    }
+    let x = this.state.edges
+    let y = this
+    this.props.stompClient.subscribe('/topic/edge', (message) => {
+      const data = JSON.parse(message.body)
+      // let x = this.state.edges
+      x.push(data)
+      console.log(data)
+      y.setState({edges:x})
+    })
+  }
+  static getDerivedStateFromProps(props, state) {
+    return {
+      sc: props.stompClient
+     };
+  }
+  componentDidMount() {
+    
+  }
 
-  console.log(pt)
-  console.log(eg)
-  var circles = pt.map(point=>{
-    return <circle cx={point.x} cy={point.y} fill="black" r="5"></circle>
-  })
+  
+  // function addlines(data){
+  //   egs.push(data)
+  //   setEdges(egs)
+  //   lines = eg.map(edge=>{
+  //     return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
+  //   })
+  // }
+  
 
-  var lines = eg.map(edge=>{
-    console.log(edge.firstPoint.x)
-    return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
-  })
-  return (
-    <div>
-      <svg height="1000px" width="1000px" style={svgstyle}>
-        {
-          circles
-        }
-      </svg>
-      <svg height="1000px" width="1000px" style={svgstyle}>
-        {
-          lines
-        }
-      </svg>
-    </div>
-    );
+  // var lines = edges.map(edge=>{
+  //   return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
+  // })
+  // console.log(lines)
+  render(){
+    return (
+      <div>
+        <svg height="1000px" width="1000px" style={svgstyle}>
+          {
+            this.props.points.map(point=>{
+              return <circle cx={point.x} cy={point.y} fill="black" r="5"></circle>
+            })
+          }
+        </svg>
+        <svg height="1000px" width="1000px" style={svgstyle}>
+          {
+            this.state.edges.map(edge=>{
+              console.log(edge)
+              return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
+            })
+          }
+        </svg>
+      </div>
+      );
+  }
 }
 
 export default BoardView

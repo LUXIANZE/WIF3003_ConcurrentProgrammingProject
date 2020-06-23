@@ -34,7 +34,7 @@ function Home() {
   //   points: null,
   // })
   // const [points, setPoints] = React.useState([])
-  const [edge, setEdge] = React.useState(null)
+  const [failed, setFailed] = React.useState(null)
   const connectCallback = (frame) => {
     setStatus({
       connected: true,
@@ -51,10 +51,14 @@ function Home() {
     //   const data = JSON.parse(message.body)
     //   setPoints(data)
     // })
-    // stompClient.subscribe('/topic/edge', function (message) {
+    // stompClient.subscribe('/topic/failed', function (message) {
     //   const data = JSON.parse(message.body)
-    //   setEdge(data.points)
+    //   alert(data)
     // });
+    stompClient.subscribe('/topic/failed', function (message) {
+      const data = message.body
+      setFailed(data)
+    });
   }
   const errorCallback = (error) => {
     setStatus({
@@ -111,10 +115,7 @@ function Home() {
           )}
         </div> */}
         <div>
-          topic/edge:
-          {edge && edge.map((point, i) =>
-            <div key={i}>{`x: ${point.x}, y: ${point.y}`}</div>
-          )}
+          {failed}
         </div>
       </div>
     </div>

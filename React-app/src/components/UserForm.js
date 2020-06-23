@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserForm(props) {
+  let a = props.stompClient
   const classes = useStyles();
   const [points, setPoints] = React.useState([])
   const [edges, setEdges] = React.useState([])
@@ -47,23 +48,24 @@ function UserForm(props) {
     const data = JSON.parse(message.body)
     setPoints(data)
   })
-  props.stompClient.subscribe('/topic/edge', function (message) {
-    const data = JSON.parse(message.body)
-    // alert(data)
-    // let x = edges.concat(data)
-    setEdges(data)
-    setSubmitted(true)
-  });
+  // props.stompClient.subscribe('/topic/edge', function (message) {
+  //   const data = JSON.parse(message.body)
+  //   // alert(data)
+  //   // let x = edges.concat(data)
+  //   setEdges(data)
+  //   setSubmitted(true)
+  // });
   const [submitted, setSubmitted] = React.useState(false)
   const handleSubmit = (e) => {
     e.preventDefault()
     props.stompClient.send("/app/user-input", {}, JSON.stringify(state));
+    setSubmitted(true)
   }
 
   setTimeout(()=>{},1000)
   return (
     <>
-    {submitted ? <BoardView points={points} edges={edges}/> : 
+    {submitted ? <BoardView points={points} edges={edges} stompClient={a}/> : 
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}

@@ -69,7 +69,7 @@ public class Board {
             
             for (Future<List> list : futureList) {
                 edges.addAll(list.get());
-                messageService.send("edge", edges);
+                // messageService.send("edge", edges);
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
