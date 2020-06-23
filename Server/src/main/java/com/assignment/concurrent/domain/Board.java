@@ -1,5 +1,6 @@
 package com.assignment.concurrent.domain;
 
+import com.assignment.concurrent.service.MessageService;
 import com.assignment.concurrent.service.StopTaskService;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,13 +22,15 @@ public class Board {
     private long startTime;
     private long endTime;
     private StopTaskService stopTask;
+    private final MessageService messageService;
     private List<Edge> edges;
 
-    public Board(Point[] points, PointPairingTask[] pointPairingTasks, Timer timer, ExecutorService executorService, StopTaskService stopTask, int m) {
+    public Board(Point[] points, PointPairingTask[] pointPairingTasks, Timer timer, ExecutorService executorService, StopTaskService stopTask, int m, MessageService messageService) {
         this.points = points;
         this.pointPairingTasks = pointPairingTasks;
         this.timer = timer;
         this.executorService = executorService;
+        this.messageService = messageService;
         this.stopTask = stopTask;
         this.m = m;
         edges = new ArrayList<>();
@@ -66,6 +69,7 @@ public class Board {
             
             for (Future<List> list : futureList) {
                 edges.addAll(list.get());
+                messageService.send("edge", edges);
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);

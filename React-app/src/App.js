@@ -48,10 +48,8 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/BoardView">
-            <BoardView />
           </Route>
           <Route path="/UserForm">
-            <UserForm />
           </Route>
           <Route path="/">
             <Home />

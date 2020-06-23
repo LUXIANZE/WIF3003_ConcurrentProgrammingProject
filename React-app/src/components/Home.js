@@ -7,7 +7,7 @@ import UserForm from './UserForm';
 
 const style = {
   root: {
-    backgroundColor: "#282c34",
+    backgroundColor: "white",
     minHeight: "100vh"
   },
   startButton: {
@@ -17,7 +17,7 @@ const style = {
     transform: "translate(-50%, -50%)",
   },
   infoBox: {
-    color: "white"
+    color: "black"
   }
 }
 let stompClient = null;
@@ -30,26 +30,31 @@ function Home() {
   const [started, setStarted] = React.useState({
     started: false
   })
-  const [board, setBoard] = React.useState({
-    points: null,
-  })
+  // const [board, setBoard] = React.useState({
+  //   points: null,
+  // })
+  // const [points, setPoints] = React.useState([])
   const [edge, setEdge] = React.useState(null)
   const connectCallback = (frame) => {
     setStatus({
       connected: true,
       errorMessage: ""
     })
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/board', function (message) {
-      const data = JSON.parse(message.body)
-      setBoard({
-        points: data.points
-      })
-    });
-    stompClient.subscribe('/topic/edge', function (message) {
-      const data = JSON.parse(message.body)
-      setEdge(data.points)
-    });
+    // console.log('Connected: ' + frame);
+    // stompClient.subscribe('/topic/board', function (message) {
+    //   const data = JSON.parse(message.body)
+    //   setBoard({
+    //     points: data.points
+    //   })
+    // });
+    // stompClient.subscribe('/topic/points', function(message) {
+    //   const data = JSON.parse(message.body)
+    //   setPoints(data)
+    // })
+    // stompClient.subscribe('/topic/edge', function (message) {
+    //   const data = JSON.parse(message.body)
+    //   setEdge(data.points)
+    // });
   }
   const errorCallback = (error) => {
     setStatus({
@@ -88,7 +93,7 @@ function Home() {
       }
       {
         status.connected
-          ? <UserForm stompClient={stompClient} started={started} />
+          ? <UserForm stompClient={stompClient} started={started}/>
           : <Button
             variant="contained"
             color="primary"
@@ -99,12 +104,12 @@ function Home() {
             </Button>
       }
       <div style={style.infoBox}>
-        <div>
+        {/* <div>
           topic/board:
           {board.points && board.points.map((point, i) =>
             <div key={i}>{`x: ${point.x}, y: ${point.y}`}</div>
           )}
-        </div>
+        </div> */}
         <div>
           topic/edge:
           {edge && edge.map((point, i) =>

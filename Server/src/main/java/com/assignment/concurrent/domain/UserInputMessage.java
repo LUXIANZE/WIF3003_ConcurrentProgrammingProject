@@ -11,4 +11,10 @@ public class UserInputMessage {
     public Integer getN(){
         return n;
     }
+    public Integer getM(){
+        return m;
+    }
+    public Integer getT(){
+        return t;
+    }
 }
