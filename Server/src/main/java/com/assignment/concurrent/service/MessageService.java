@@ -13,21 +13,13 @@ import java.util.Set;
 
 @Service
 public class MessageService {
+
     @Autowired
     public SimpMessageSendingOperations messagingTemplate;
 
-    public synchronized void send(String message) {
-        try {
-            Thread.sleep(1000);
-            messagingTemplate.convertAndSend( "/topic/edge", new Edge(new Point(1,1),new Point(1,1)) );
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public synchronized void send(String channelName, Object data) {
+        String destination = "/topic/" + channelName;
+        messagingTemplate.convertAndSend(destination, data);
     }
 
-    private static Double randomDouble() {
-        Double value = new Random().nextDouble()*1000;
-        DecimalFormat df = new DecimalFormat("#.##");
-        return Double.valueOf(df.format(value));
-    }
 }

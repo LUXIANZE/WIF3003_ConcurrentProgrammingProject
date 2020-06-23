@@ -1,14 +1,11 @@
 package com.assignment.concurrent.domain;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
-import com.assignment.concurrent.service.PointsService;
+import com.assignment.concurrent.service.MessageService;
 
 public class PointPairingTask implements Callable<List> {
 
@@ -19,9 +16,11 @@ public class PointPairingTask implements Callable<List> {
     private int numberOfPoints;
     private Point[] points;
     private List<Edge> edgeArrayList;
+    private final MessageService messageService;
 
-    public PointPairingTask(Point[] arr){
+    public PointPairingTask(Point[] arr, MessageService messageService){
         this.points = arr;
+        this.messageService = messageService;
         this.edgeArrayList = new ArrayList<Edge>();
     }
 

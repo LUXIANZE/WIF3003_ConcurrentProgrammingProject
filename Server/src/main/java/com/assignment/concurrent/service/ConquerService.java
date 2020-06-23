@@ -14,9 +14,11 @@ import java.util.concurrent.Callable;
 public class ConquerService {
 
     private final RunnableFactory runnableFactory;
+    private final MessageService messageService;
 
-    public ConquerService(RunnableFactory runnableFactory, PointsService pointsFactory) {
+    public ConquerService(RunnableFactory runnableFactory, PointsService pointsFactory, MessageService messageService) {
         this.runnableFactory = runnableFactory;
+        this.messageService = messageService;
     }
 
     public Board start(UserInputMessage userInputMessage) {
@@ -25,7 +27,7 @@ public class ConquerService {
         Set<Point> points = PointsService.generatePoints(n);
         Point[] pointsArr = new Point[n];
         points.toArray(pointsArr);
-        Callable C = new PointPairingTask(pointsArr);
+        Callable C = new PointPairingTask(pointsArr, messageService);
         // board.setPoints(points);
         //can change to Thread pool
         Thread thread1 = new Thread(runnableFactory.createRunnableSpammer(points));
