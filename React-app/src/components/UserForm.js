@@ -91,6 +91,7 @@ function UserForm(props) {
             color="primary"
             className={classes.loginButton}
             type="submit"
+            href="/BoardView"
           >
             Conquer
           </Button>
