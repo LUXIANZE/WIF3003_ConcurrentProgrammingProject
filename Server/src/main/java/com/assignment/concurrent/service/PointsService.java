@@ -13,7 +13,7 @@ import java.util.Set;
 @Service
 public class PointsService {
 
-    public static Set<Point> generatePoints(int numOfPoints) {
+    public Set<Point> generatePoints(int numOfPoints) {
         Set<Point> points = new HashSet<>();
         while (points.size() < numOfPoints) {
             Point point = new Point(randomDouble(), randomDouble());
@@ -22,7 +22,7 @@ public class PointsService {
         return points;
     }
 
-    public static Double randomDouble() {
+    public Double randomDouble() {
         Double value = new Random().nextDouble()*1000;
         DecimalFormat df = new DecimalFormat("#.##");
         return Double.valueOf(df.format(value));

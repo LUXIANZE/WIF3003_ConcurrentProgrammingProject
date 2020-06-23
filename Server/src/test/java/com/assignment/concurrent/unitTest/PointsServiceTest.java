@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collection;
@@ -18,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 class PointsServiceTest {
 
+    @Autowired
+    private PointsService pointsService;
+
     @BeforeEach
     void setUp() {
     }
@@ -29,7 +33,7 @@ class PointsServiceTest {
     @Test
     public void createPointsShouldNotContainDuplicateValues() {
         int numOfPoints = 5000;
-        Collection collection = PointsService.generatePoints(numOfPoints);
+        Collection collection = pointsService.generatePoints(numOfPoints);
 
         assertEquals(collection.size() , numOfPoints);
         assertEquals(new HashSet<Double>(collection).size(), numOfPoints);
@@ -38,7 +42,7 @@ class PointsServiceTest {
     @Test
     public void popShouldRemoveSelectedElementFromSet() {
         int numOfPoints = 5000;
-        Set<Point> set = PointsService.generatePoints(numOfPoints);
+        Set<Point> set = pointsService.generatePoints(numOfPoints);
 
         // Point point = PointsService.pop(set);
         assertEquals(set.size(), numOfPoints-1);

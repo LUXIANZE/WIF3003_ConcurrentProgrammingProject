@@ -4,16 +4,19 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.assignment.concurrent.domain.Edge;
 import com.assignment.concurrent.domain.Point;
 import com.assignment.concurrent.domain.PointPairingTask;
 
+import com.assignment.concurrent.service.MessageService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PointPairingTaskUnitTest {
     Point[] arr = generateTestCases();
-    
-    Callable PPT = new PointPairingTask(arr);
+    @Autowired
+    private MessageService messageService;
+    Callable PPT = new PointPairingTask(arr, messageService);
+
     @Test
     public void TestCallMethod(){
         ExecutorService ES = Executors.newFixedThreadPool(1);

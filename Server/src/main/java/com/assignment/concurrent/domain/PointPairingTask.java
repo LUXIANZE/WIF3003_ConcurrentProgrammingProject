@@ -8,33 +8,38 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import com.assignment.concurrent.service.PointsService;
+import com.assignment.concurrent.service.MessageService;
 
 public class PointPairingTask implements Callable<List> {
 
-    private static int totalEdgeFormed;
-    private static long startTime;
-    private boolean threadFail;
+    private static boolean threadFail;
     private int failAttempts;
     private int numberOfPoints;
     private Point[] points;
     private List<Edge> edgeArrayList;
+    private final MessageService messageService;
+    private ThreadColor threadColor = new ThreadColor();
 
-    public PointPairingTask(Point[] arr){
+    public PointPairingTask(Point[] arr, MessageService messageService){
         this.points = arr;
+        this.messageService = messageService;
         this.edgeArrayList = new ArrayList<Edge>();
+        threadFail = false;
     }
 
     @Override
     public List call() throws Exception {
-        // TODO change the flow control accordingly, these are dummy values
-        long start = 0;
-        long now = 0;
-        long target = 4;
 
-        while( (now-start) < target ){
-            edgeArrayList.add(formEdges());
-            now++;
+        while(!threadFail){
+            Edge edge = formEdges();
+            if(null != edge) {
+                //add this checking because the last edge maybe is null
+                //and added inside the list
+                edgeArrayList.add(edge);
+                edge.getFirstPoint().setThreadColor(threadColor);
+                edge.getSecondPoint().setThreadColor(threadColor);
+                messageService.send("edge", edge);
+            }
         }
         
         return edgeArrayList;
@@ -48,11 +53,21 @@ public class PointPairingTask implements Callable<List> {
         return failAttempts;
     }
     
+    public static void killThread(){
+        threadFail = true;
+    }
+
     private Edge formEdges() throws InterruptedException {
         Random r = new Random();
         Edge edgeFormed = null;
 
-        while (edgeFormed == null) {
+        while (edgeFormed == null && !threadFail) {
+            if(failAttempts >= 20){//if failAttempts equal or more than 20 the thread
+                //should stop forming edges
+                threadFail = true;
+                break;
+            }
+
             // generate 2 random int
             int r1 = r.nextInt(points.length);
             int r2 = r.nextInt(points.length);

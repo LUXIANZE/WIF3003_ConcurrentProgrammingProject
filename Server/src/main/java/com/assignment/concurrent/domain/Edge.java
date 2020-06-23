@@ -15,7 +15,7 @@ public class Edge {
         this.secondPoint = secondPoint;
     }
 
-    public Point[] getEdegePoints(){
+    public Point[] getEdgePoints(){
         return new Point[]{this.firstPoint, this.secondPoint};
     }
 }
