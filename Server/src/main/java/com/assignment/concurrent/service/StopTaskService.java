@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import org.springframework.stereotype.Service;
 
-@Service
 public class StopTaskService extends TimerTask {
     
     private ExecutorService executorService;
