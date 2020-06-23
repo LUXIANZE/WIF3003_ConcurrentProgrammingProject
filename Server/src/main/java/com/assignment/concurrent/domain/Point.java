@@ -11,6 +11,7 @@ public class Point {
     private double y;
     private boolean hasEdge = false;
     private ReentrantLock lock = new ReentrantLock();
+    private ThreadColor threadColor;
     
     public Point(double x, double y){
         this.x = x;

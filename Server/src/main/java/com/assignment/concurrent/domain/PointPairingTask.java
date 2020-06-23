@@ -18,6 +18,7 @@ public class PointPairingTask implements Callable<List> {
     private Point[] points;
     private List<Edge> edgeArrayList;
     private final MessageService messageService;
+    private ThreadColor threadColor = new ThreadColor();
 
     public PointPairingTask(Point[] arr, MessageService messageService){
         this.points = arr;
@@ -35,6 +36,8 @@ public class PointPairingTask implements Callable<List> {
                 //add this checking because the last edge maybe is null
                 //and added inside the list
                 edgeArrayList.add(edge);
+                edge.getFirstPoint().setThreadColor(threadColor);
+                edge.getSecondPoint().setThreadColor(threadColor);
                 messageService.send("edge", edge);
             }
         }
