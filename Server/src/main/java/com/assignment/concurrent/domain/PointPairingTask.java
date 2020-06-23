@@ -19,7 +19,7 @@ public class PointPairingTask implements Callable<List> {
     private List<Edge> edgeArrayList;
     private final MessageService messageService;
 
-    public PointPairingTask(Point[] arr){
+    public PointPairingTask(Point[] arr, MessageService messageService){
         this.points = arr;
         this.messageService = messageService;
         this.edgeArrayList = new ArrayList<Edge>();
@@ -31,9 +31,12 @@ public class PointPairingTask implements Callable<List> {
 
         while(!threadFail){
             Edge edge = formEdges();
-            if(null != edge)//add this checking because the last edge maybe is null
+            if(null != edge) {
+                //add this checking because the last edge maybe is null
                 //and added inside the list
                 edgeArrayList.add(edge);
+                messageService.send("edge", edge);
+            }
         }
         
         return edgeArrayList;
