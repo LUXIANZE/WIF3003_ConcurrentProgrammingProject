@@ -18,7 +18,6 @@ public class ConquerController {
     @MessageMapping("/user-input")
     @SendTo("/topic/board")
     public Board createBoard(UserInputMessage userInputMessage) throws Exception {
-        Thread.sleep(1000); // simulated delay
         return conquerService.start(userInputMessage);
     }
 

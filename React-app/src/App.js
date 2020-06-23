@@ -45,7 +45,13 @@ function App() {
     });
     stompClient.subscribe('/topic/edge', function (message) {
       const data = JSON.parse(message.body)
-      setEdge(data.points)
+      console.log(data.firstPoint.threadColor)
+      console.log(data.secondPoint.threadColor)
+      setEdge(data.points) //this is Edge.java in java
+    });
+    stompClient.subscribe('/topic/points', function (message) {
+      const data = JSON.parse(message.body)
+      console.log(data); //this is Point[] pointsArr in java
     });
   }
   const errorCallback = (error) => {
