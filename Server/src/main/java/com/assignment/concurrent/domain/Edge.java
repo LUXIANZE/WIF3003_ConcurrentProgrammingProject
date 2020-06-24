@@ -9,6 +9,7 @@ public class Edge {
 
     private Point firstPoint;
     private Point secondPoint;
+    private ThreadColor threadColor;
 
     public Edge(Point firstPoint, Point secondPoint) {
         this.firstPoint = firstPoint;

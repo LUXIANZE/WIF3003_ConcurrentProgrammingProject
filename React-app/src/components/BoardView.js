@@ -101,7 +101,7 @@ class BoardView extends React.Component {
           {
             this.state.edges.map(edge => {
               console.log(edge)
-              return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y} style={mystyle(edge.firstPoint.threadColor)} ></line>
+              return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y} style={mystyle(edge.threadColor)} ></line>
             })
           }
         </svg>
