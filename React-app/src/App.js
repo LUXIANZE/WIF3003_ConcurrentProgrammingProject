@@ -27,21 +27,9 @@ function App() {
     <Router>
       <div>
         <nav style={{padding:"10px"}}>
-        <Link to="/" style={linkStyle}>
-          <Button variant="contained" style={buttonStyle}>
-            Home
+          <Button variant="contained" style={buttonStyle} onClick={()=>{window.location.assign("http://localhost:3000/")}}>
+            Restart Game
           </Button>
-        </Link>
-        {/* <Link to="/UserForm" style={linkStyle}>
-          <Button variant="contained" style={buttonStyle}>
-            UserForm
-          </Button>
-        </Link> */}
-        <Link to="/BoardView" style={linkStyle}>
-          <Button variant="contained" style={buttonStyle}>
-            Board View
-          </Button>
-        </Link>
         </nav>
 
         {/* A <Switch> looks through its children <Route>s and
