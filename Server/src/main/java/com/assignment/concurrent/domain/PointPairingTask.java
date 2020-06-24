@@ -38,6 +38,7 @@ public class PointPairingTask implements Callable<List> {
                 edgeArrayList.add(edge);
                 edge.getFirstPoint().setThreadColor(threadColor);
                 edge.getSecondPoint().setThreadColor(threadColor);
+                System.out.println(threadColor);
                 messageService.send("edge", edge);
             }
         }

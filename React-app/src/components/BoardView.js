@@ -33,24 +33,26 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(2)}px auto`
   }
 }));
-const mystyle = {
-  stroke:'rgb(255,0,0)',
-  strokeWidth:2,
-  backgroundColor:"transparent"
+const mystyle = (threadColor) => {
+  return {
+    stroke: `rgb(${threadColor.r},${threadColor.g},${threadColor.b})`,
+    strokeWidth: 2,
+    backgroundColor: "transparent"
+  }
 }
 const svgstyle = {
-  backgroundColor:"transparent",
-  position:"absolute",
+  backgroundColor: "transparent",
+  position: "absolute",
   top: 100,
   left: 100
 }
 class BoardView extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      edges:[],
-      circles : null,
-      sc:null
+      edges: [],
+      circles: null,
+      sc: null
     }
     let x = this.state.edges
     let y = this
@@ -59,19 +61,19 @@ class BoardView extends React.Component {
       // let x = this.state.edges
       x.push(data)
       console.log(data)
-      y.setState({edges:x})
+      y.setState({ edges: x })
     })
   }
   static getDerivedStateFromProps(props, state) {
     return {
       sc: props.stompClient
-     };
+    };
   }
   componentDidMount() {
-    
+
   }
 
-  
+
   // function addlines(data){
   //   egs.push(data)
   //   setEdges(egs)
@@ -79,32 +81,32 @@ class BoardView extends React.Component {
   //     return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
   //   })
   // }
-  
+
 
   // var lines = edges.map(edge=>{
   //   return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
   // })
   // console.log(lines)
-  render(){
+  render() {
     return (
       <div>
         <svg height="1000px" width="1000px" style={svgstyle}>
           {
-            this.props.points.map(point=>{
+            this.props.points.map(point => {
               return <circle cx={point.x} cy={point.y} fill="black" r="5"></circle>
             })
           }
         </svg>
         <svg height="1000px" width="1000px" style={svgstyle}>
           {
-            this.state.edges.map(edge=>{
+            this.state.edges.map(edge => {
               console.log(edge)
-              return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y}  style={mystyle} ></line>
+              return <line x1={edge.firstPoint.x} y1={edge.firstPoint.y} x2={edge.secondPoint.x} y2={edge.secondPoint.y} style={mystyle(edge.firstPoint.threadColor)} ></line>
             })
           }
         </svg>
       </div>
-      );
+    );
   }
 }
 
