@@ -38,7 +38,7 @@ public class ConquerService {
             pointPairingTasks[i] = new PointPairingTask(pointsArr, messageService);
         }
         Board board = new Board(pointsArr, pointPairingTasks, timer, executorService
-                , stopTask, m);
+                , stopTask, m, messageService);
 //        Callable C = new PointPairingTask(pointsArr, messageService);
         board.startProgram();
         return board;

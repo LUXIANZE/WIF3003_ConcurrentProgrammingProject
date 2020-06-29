@@ -18,7 +18,8 @@ public class PointPairingTask implements Callable<List> {
     private Point[] points;
     private List<Edge> edgeArrayList;
     private final MessageService messageService;
-    private ThreadColor threadColor = new ThreadColor();
+    private ThreadLocal<ThreadColor> threadLocal =
+            new ThreadLocal<>();
 
     public PointPairingTask(Point[] arr, MessageService messageService){
         this.points = arr;
@@ -29,19 +30,19 @@ public class PointPairingTask implements Callable<List> {
 
     @Override
     public List call() throws Exception {
-
+        threadLocal.set( new ThreadColor() );
         while(!threadFail){
             Edge edge = formEdges();
             if(null != edge) {
                 //add this checking because the last edge maybe is null
                 //and added inside the list
                 edgeArrayList.add(edge);
-                edge.getFirstPoint().setThreadColor(threadColor);
-                edge.getSecondPoint().setThreadColor(threadColor);
+                edge.setThreadColor(threadLocal.get());
+                System.out.println(threadLocal.get());
                 messageService.send("edge", edge);
             }
         }
-        
+
         return edgeArrayList;
     }
 
@@ -52,7 +53,7 @@ public class PointPairingTask implements Callable<List> {
     public int getFailAttempts(){
         return failAttempts;
     }
-    
+
     public static void killThread(){
         threadFail = true;
     }
@@ -65,6 +66,7 @@ public class PointPairingTask implements Callable<List> {
             if(failAttempts >= 20){//if failAttempts equal or more than 20 the thread
                 //should stop forming edges
                 threadFail = true;
+                messageService.send("failed", "stopped due to fail >= 20");
                 break;
             }
 

@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Sparta from "../resources/sparta.jpg";
+import BoardView from './BoardView'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -34,69 +35,94 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserForm(props) {
+  let a = props.stompClient
   const classes = useStyles();
+  const [points, setPoints] = React.useState([])
+  const [edges, setEdges] = React.useState([])
   const [state, setState] = React.useState({
     n: "",
     m: "",
     t: ""
   })
+  props.stompClient.subscribe('/topic/points', function(message) {
+    const data = JSON.parse(message.body)
+    setPoints(data)
+  })
+  // props.stompClient.subscribe('/topic/edge', function (message) {
+  //   const data = JSON.parse(message.body)
+  //   // alert(data)
+  //   // let x = edges.concat(data)
+  //   setEdges(data)
+  //   setSubmitted(true)
+  // });
+  const [submitted, setSubmitted] = React.useState(false)
   const handleSubmit = (e) => {
     e.preventDefault()
     props.stompClient.send("/app/user-input", {}, JSON.stringify(state));
+    setSubmitted(true)
   }
+
+  setTimeout(()=>{},1000)
   return (
-    <Card className={classes.card}>
-      <CardMedia
-        className={classes.media}
-        image={Sparta}
-        title="Logo"
-      />
-      <CardContent>
-        <form
-          className={classes.form}
-          onSubmit={handleSubmit}
-        >
-          <TextField
-            id="n"
-            name="n"
-            label="Number of random points, n"
-            required
-            type="number"
-            value={state.n}
-            onChange={(e) => { setState({ ...state, n: e.target.value }) }}
-            margin="normal"
-          />
-          <TextField
-            id="m"
-            name="m"
-            label="Game time, m (in seconds)"
-            required
-            type="number"
-            value={state.m}
-            onChange={(e) => { setState({ ...state, m: e.target.value }) }}
-            margin="normal"
-          />
-          <TextField
-            id="t"
-            name="t"
-            label="Number of threads, t"
-            required
-            type="number"
-            value={state.t}
-            onChange={(e) => { setState({ ...state, t: e.target.value }) }}
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.loginButton}
-            type="submit"
+    <>
+    {submitted ? <BoardView points={points} edges={edges} stompClient={a}/> : 
+      <Card className={classes.card}>
+        <CardMedia
+          className={classes.media}
+          image={Sparta}
+          title="Logo"
+        />
+        <CardContent>
+          <form
+            className={classes.form}
+            onSubmit={handleSubmit}
           >
-            Conquer
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <TextField
+              id="n"
+              name="n"
+              label="Number of random points, n"
+              required
+              type="number"
+              value={state.n}
+              onChange={(e) => { 
+                setState({ ...state, n: e.target.value }) }}
+              margin="normal"
+            />
+            <TextField
+              id="m"
+              name="m"
+              label="Game time, m (in seconds)"
+              required
+              type="number"
+              value={state.m}
+              onChange={(e) => { 
+                setState({ ...state, m: e.target.value }) }}
+              margin="normal"
+            />
+            <TextField
+              id="t"
+              name="t"
+              label="Number of threads, t"
+              required
+              type="number"
+              value={state.t}
+              onChange={(e) => { 
+                setState({ ...state, t: e.target.value }) }}
+              margin="normal"
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.loginButton}
+              type="submit"
+            >
+              Conquer
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    }
+    </>
   )
 }
 
